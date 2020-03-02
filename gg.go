@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	commands "github.com/thoiberg/good-git/internal/commands"
 	"github.com/urfave/cli/v2"
 )
 
@@ -19,6 +20,7 @@ func main() {
 				Usage:     "[INCOMPLETE] shows the local and remote branches. Can switch to the branch by entering the number",
 				UsageText: "gg show",
 				Action: func(c *cli.Context) error {
+					commands.Show()
 					return cli.Exit("Still being built!", 1)
 				},
 			},
