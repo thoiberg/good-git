@@ -22,7 +22,7 @@ func Show() {
 	gitCurrentBranchStdoutStderr, gitCurrentBranchErr := gitCurrentBranchCmd.CombinedOutput()
 
 	if gitCurrentBranchErr != nil {
-		log.Fatal(gitCurrentBranchErr)
+		log.Fatal(gitCurrentBranchStdoutStderr)
 	}
 
 	branches := strings.Split(bytesToString(gitBranchesStdoutStderr), "\n")
