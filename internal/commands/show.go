@@ -8,6 +8,8 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+
+	"github.com/fatih/color"
 )
 
 func Show() {
@@ -26,11 +28,15 @@ func Show() {
 	}
 
 	branches := strings.Split(bytesToString(gitBranchesStdoutStderr), "\n")
-	// TODO: remove the * from the current branch
 
-	for index, element := range branches {
-		if len(element) > 0 {
-			fmt.Printf("%d) %v\n", index, element)
+	for index, branch := range branches {
+		if len(branch) > 0 {
+			if isCurrentBranch(branch) {
+				normalisedBranchName := strings.Replace(branch, "* ", "", 1)
+				color.Green("%d)   %v\n", index, normalisedBranchName)
+			} else {
+				fmt.Printf("%d) %v\n", index, branch)
+			}
 		}
 	}
 
@@ -40,11 +46,10 @@ func Show() {
 	text, _ := reader.ReadString('\n')
 
 	inputInt, err := strconv.Atoi(strings.TrimSuffix(text, "\n"))
-	// TODO: Need to handle when the input is not within the valid range
-
 	if err != nil {
 		log.Fatal(err)
 	}
+	// TODO: Need to handle when the input is not within the valid range
 
 	branchToCheckout := branches[inputInt]
 	gitCheckoutCmd := exec.Command("git", "checkout", strings.TrimSpace(branchToCheckout))
@@ -60,4 +65,8 @@ func Show() {
 // https://gist.github.com/is73/de4f38e1d8da157fe33e
 func bytesToString(data []byte) string {
 	return string(data[:])
+}
+
+func isCurrentBranch(s string) bool {
+	return strings.HasPrefix(s, "*")
 }
