@@ -1,9 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"os/exec"
+	"os"
+
+	"github.com/urfave/cli/v2"
 )
 
 func main() {
@@ -13,5 +14,4 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("%q\n", stdoutStderr)
 }
