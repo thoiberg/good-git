@@ -35,7 +35,7 @@ func Show() {
 
 	// listen for input
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Enter text: ")
+	fmt.Print("Enter the number next to the branch name to switch: ")
 	text, _ := reader.ReadString('\n')
 
 	inputInt, err := strconv.Atoi(strings.TrimSuffix(text, "\n"))
