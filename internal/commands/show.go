@@ -20,13 +20,6 @@ func Show() {
 		log.Fatal(bytesToString(gitBranchesStdoutStderr))
 	}
 
-	gitCurrentBranchCmd := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
-	gitCurrentBranchStdoutStderr, gitCurrentBranchErr := gitCurrentBranchCmd.CombinedOutput()
-
-	if gitCurrentBranchErr != nil {
-		log.Fatal(gitCurrentBranchStdoutStderr)
-	}
-
 	branches := strings.Split(bytesToString(gitBranchesStdoutStderr), "\n")
 
 	for index, branch := range branches {
