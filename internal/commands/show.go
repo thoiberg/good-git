@@ -22,14 +22,20 @@ func Show() {
 
 	branches := strings.Split(bytesToString(gitBranchesStdoutStderr), "\n")
 
-	for index, branch := range branches {
-		if len(branch) > 0 {
-			if isCurrentBranch(branch) {
-				normalisedBranchName := strings.Replace(branch, "* ", "", 1)
-				color.Green("%d)   %v\n", index, normalisedBranchName)
-			} else {
-				fmt.Printf("%d) %v\n", index, branch)
-			}
+	var onlyBranchNames []string
+
+	for _, branchName := range branches {
+		if len(branchName) > 0 {
+			onlyBranchNames = append(onlyBranchNames, branchName)
+		}
+	}
+
+	for index, branch := range onlyBranchNames {
+		if isCurrentBranch(branch) {
+			normalisedBranchName := strings.Replace(branch, "* ", "", 1)
+			color.Green("%d)   %v\n", index, normalisedBranchName)
+		} else {
+			fmt.Printf("%d) %v\n", index, branch)
 		}
 	}
 
@@ -42,9 +48,12 @@ func Show() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// TODO: Need to handle when the input is not within the valid range
 
-	branchToCheckout := branches[inputInt]
+	if inputInt < 0 || inputInt > len(onlyBranchNames)-1 {
+		log.Fatal("Branch number is invalid. Please enter one of the numbers next to the branch number")
+	}
+
+	branchToCheckout := onlyBranchNames[inputInt]
 	gitCheckoutCmd := exec.Command("git", "checkout", strings.TrimSpace(branchToCheckout))
 	gitCheckoutStdStderr, gitCheckoutErr := gitCheckoutCmd.CombinedOutput()
 
