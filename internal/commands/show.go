@@ -48,7 +48,7 @@ func Show() (string, error) {
 
 	// checkout the branch
 	branchToCheckout := normalisedBranchNames[branchNumberToCheckout]
-	gitCheckoutCmd := exec.Command("git", "checkout", strings.TrimSpace(branchToCheckout))
+	gitCheckoutCmd := exec.Command("git", "checkout", branchToCheckout)
 	gitCheckoutStdStderr, gitCheckoutErr := gitCheckoutCmd.CombinedOutput()
 
 	if gitCheckoutErr != nil {
@@ -75,7 +75,7 @@ func normaliseGitBranchOutput(branches []string) []string {
 			trimmedBranch := strings.TrimSpace(branch)
 			if isCurrentBranch(trimmedBranch) {
 				onlyBranchName := strings.Replace(trimmedBranch, "* ", "", 1)
-				coloredBranchName := color.GreenString("%v", onlyBranchName)
+				coloredBranchName := color.GreenString(onlyBranchName)
 				normalisedBranchNames = append(normalisedBranchNames, coloredBranchName)
 			} else {
 				normalisedBranchNames = append(normalisedBranchNames, trimmedBranch)
