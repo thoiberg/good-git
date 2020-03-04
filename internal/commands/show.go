@@ -13,7 +13,7 @@ import (
 )
 
 func Show() (string, error) {
-	gitBranchesCmd := exec.Command("git", "branch", "--list")
+	gitBranchesCmd := exec.Command("git", "branch", "-a")
 	gitBranchesStdoutStderr, gitBranchesErr := gitBranchesCmd.CombinedOutput()
 
 	if gitBranchesErr != nil {
@@ -26,18 +26,19 @@ func Show() (string, error) {
 
 	for _, branch := range branches {
 		if len(branch) > 0 {
-			if isCurrentBranch(branch) {
-				onlyBranchName := strings.Replace(branch, "* ", "", 1)
-				coloredBranchName := color.GreenString("  %v", onlyBranchName)
+			trimmedBranch := strings.TrimSpace(branch)
+			if isCurrentBranch(trimmedBranch) {
+				onlyBranchName := strings.Replace(trimmedBranch, "* ", "", 1)
+				coloredBranchName := color.GreenString("%v", onlyBranchName)
 				normalisedBranchNames = append(normalisedBranchNames, coloredBranchName)
 			} else {
-				normalisedBranchNames = append(normalisedBranchNames, branch)
+				normalisedBranchNames = append(normalisedBranchNames, trimmedBranch)
 			}
 		}
 	}
 
 	for index, branch := range normalisedBranchNames {
-		fmt.Printf("%d) %v\n", index, branch)
+		fmt.Printf("%d)\t%v\n", index, branch)
 	}
 
 	branchNumberToCheckout := -1
