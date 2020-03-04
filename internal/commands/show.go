@@ -40,21 +40,25 @@ func Show() (string, error) {
 		fmt.Printf("%d) %v\n", index, branch)
 	}
 
+	branchNumberToCheckout := -1
 	// listen for input
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Enter the number next to the branch name to switch: ")
-	text, _ := reader.ReadString('\n')
 
-	inputInt, err := strconv.Atoi(strings.TrimSuffix(text, "\n"))
-	if err != nil {
-		return "", errors.New("input must be a number")
+	for branchNumberToCheckout == -1 {
+		fmt.Println("Enter the number next to the branch name to switch: ")
+		text, _ := reader.ReadString('\n')
+
+		inputInt, err := strconv.Atoi(strings.TrimSuffix(text, "\n"))
+		if err != nil {
+			color.Red("input must be a number")
+		} else if inputInt < 0 || inputInt > len(normalisedBranchNames)-1 {
+			color.Red("Branch number is invalid. Please enter one of the numbers next to the branch name")
+		} else {
+			branchNumberToCheckout = inputInt
+		}
 	}
 
-	if inputInt < 0 || inputInt > len(normalisedBranchNames)-1 {
-		return "", errors.New("Branch number is invalid. Please enter one of the numbers next to the branch number")
-	}
-
-	branchToCheckout := normalisedBranchNames[inputInt]
+	branchToCheckout := normalisedBranchNames[branchNumberToCheckout]
 	gitCheckoutCmd := exec.Command("git", "checkout", strings.TrimSpace(branchToCheckout))
 	gitCheckoutStdStderr, gitCheckoutErr := gitCheckoutCmd.CombinedOutput()
 
