@@ -41,13 +41,17 @@ func Show() (string, error) {
 		cols = 2
 	}
 
+	fmt.Print("Your available local branches are:\n\n")
+
 	for index, branch := range normalisedBranchNames {
 		if branch == currentBranch {
-			color.Green("%s)\t%v\n", alignRight(index, cols), branch)
+			color.Green(" * %s  %v\n", alignRight(index, cols), branch)
 		} else {
-			fmt.Printf("%s)\t%v\n", alignRight(index, cols), branch)
+			fmt.Printf("   %s  %v\n", alignRight(index, cols), branch)
 		}
 	}
+
+	fmt.Print("\n")
 
 	branchNumberToCheckout := -1
 	reader := bufio.NewReader(os.Stdin)
