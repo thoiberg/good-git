@@ -28,10 +28,11 @@ func Show() (string, error) {
 		if len(branch) > 0 {
 			if isCurrentBranch(branch) {
 				onlyBranchName := strings.Replace(branch, "* ", "", 1)
-				coloredBranchName := color.GreenString(onlyBranchName)
+				coloredBranchName := color.GreenString("  %v", onlyBranchName)
 				normalisedBranchNames = append(normalisedBranchNames, coloredBranchName)
+			} else {
+				normalisedBranchNames = append(normalisedBranchNames, branch)
 			}
-			normalisedBranchNames = append(normalisedBranchNames, branch)
 		}
 	}
 
