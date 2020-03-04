@@ -50,7 +50,13 @@ func main() {
 				Usage:     "[INCOMPLETE] Pull any commits from your remote branch into your local, and push any local commits to the remote.",
 				UsageText: "gg sync",
 				Action: func(c *cli.Context) error {
-					return cli.Exit("Still being built!", 1)
+					message, err := commands.Sync()
+
+					if err != nil {
+						return cli.Exit(err, 1)
+					}
+
+					return cli.Exit(message, 0)
 				},
 			},
 			{
