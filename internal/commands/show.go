@@ -2,8 +2,8 @@ package commands
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"strconv"
@@ -12,12 +12,12 @@ import (
 	"github.com/fatih/color"
 )
 
-func Show() {
+func Show() (string, error) {
 	gitBranchesCmd := exec.Command("git", "branch", "--list")
 	gitBranchesStdoutStderr, gitBranchesErr := gitBranchesCmd.CombinedOutput()
 
 	if gitBranchesErr != nil {
-		log.Fatal(bytesToString(gitBranchesStdoutStderr))
+		return "", errors.New(bytesToString(gitBranchesStdoutStderr))
 	}
 
 	branches := strings.Split(bytesToString(gitBranchesStdoutStderr), "\n")
@@ -46,11 +46,11 @@ func Show() {
 
 	inputInt, err := strconv.Atoi(strings.TrimSuffix(text, "\n"))
 	if err != nil {
-		log.Fatal(err)
+		return "", errors.New("input must be a number")
 	}
 
 	if inputInt < 0 || inputInt > len(onlyBranchNames)-1 {
-		log.Fatal("Branch number is invalid. Please enter one of the numbers next to the branch number")
+		return "", errors.New("Branch number is invalid. Please enter one of the numbers next to the branch number")
 	}
 
 	branchToCheckout := onlyBranchNames[inputInt]
@@ -58,10 +58,10 @@ func Show() {
 	gitCheckoutStdStderr, gitCheckoutErr := gitCheckoutCmd.CombinedOutput()
 
 	if gitCheckoutErr != nil {
-		log.Fatal(bytesToString(gitCheckoutStdStderr))
+		return "", errors.New(bytesToString(gitCheckoutStdStderr))
 	}
 
-	fmt.Print(bytesToString(gitCheckoutStdStderr))
+	return bytesToString(gitCheckoutStdStderr), nil
 }
 
 // https://gist.github.com/is73/de4f38e1d8da157fe33e

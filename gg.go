@@ -20,8 +20,13 @@ func main() {
 				Usage:     "[INCOMPLETE] shows the local and remote branches. Can switch to the branch by entering the number",
 				UsageText: "gg show",
 				Action: func(c *cli.Context) error {
-					commands.Show()
-					return cli.Exit("Still being built!", 1)
+					message, err := commands.Show()
+
+					if err != nil {
+						return cli.Exit(err, 1)
+					}
+
+					return cli.Exit(message, 0)
 				},
 			},
 			{
