@@ -54,7 +54,7 @@ func Show() (string, error) {
 
 	// loop until we get a valid branch number
 	for branchNumberToCheckout == -1 {
-		fmt.Println("Enter the number next to the branch name to switch: ")
+		fmt.Print("Enter the number next to the branch name to switch: ")
 		text, _ := reader.ReadString('\n')
 
 		inputInt, err := strconv.Atoi(strings.TrimSuffix(text, "\n"))
