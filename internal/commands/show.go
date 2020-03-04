@@ -33,11 +33,19 @@ func Show() (string, error) {
 
 	var normalisedBranchNames = normaliseGitBranchOutput(branches)
 
+	numberOfBranches := len(normalisedBranchNames)
+
+	cols := 1
+
+	if numberOfBranches > 9 {
+		cols = 2
+	}
+
 	for index, branch := range normalisedBranchNames {
 		if branch == currentBranch {
-			color.Green("%d)\t%v\n", index, branch)
+			color.Green("%s)\t%v\n", alignRight(index, cols), branch)
 		} else {
-			fmt.Printf("%d)\t%v\n", index, branch)
+			fmt.Printf("%s)\t%v\n", alignRight(index, cols), branch)
 		}
 	}
 
@@ -76,10 +84,6 @@ func bytesToString(data []byte) string {
 	return string(data[:])
 }
 
-func isCurrentBranch(s string) bool {
-	return strings.HasPrefix(s, "*")
-}
-
 func normaliseGitBranchOutput(branches []string) []string {
 	var normalisedBranchNames []string
 
@@ -92,4 +96,13 @@ func normaliseGitBranchOutput(branches []string) []string {
 	}
 
 	return normalisedBranchNames
+}
+
+func alignRight(input int, columns int) string {
+	str := strconv.Itoa(input)
+	if input < 10 && columns == 2 {
+		return " " + str
+	} else {
+		return str
+	}
 }
