@@ -22,21 +22,21 @@ func Show() (string, error) {
 
 	branches := strings.Split(bytesToString(gitBranchesStdoutStderr), "\n")
 
-	var onlyBranchNames []string
+	var normalisedBranchNames []string
 
-	for _, branchName := range branches {
-		if len(branchName) > 0 {
-			onlyBranchNames = append(onlyBranchNames, branchName)
+	for _, branch := range branches {
+		if len(branch) > 0 {
+			if isCurrentBranch(branch) {
+				onlyBranchName := strings.Replace(branch, "* ", "", 1)
+				coloredBranchName := color.GreenString(onlyBranchName)
+				normalisedBranchNames = append(normalisedBranchNames, coloredBranchName)
+			}
+			normalisedBranchNames = append(normalisedBranchNames, branch)
 		}
 	}
 
-	for index, branch := range onlyBranchNames {
-		if isCurrentBranch(branch) {
-			normalisedBranchName := strings.Replace(branch, "* ", "", 1)
-			color.Green("%d)   %v\n", index, normalisedBranchName)
-		} else {
-			fmt.Printf("%d) %v\n", index, branch)
-		}
+	for index, branch := range normalisedBranchNames {
+		fmt.Printf("%d) %v\n", index, branch)
 	}
 
 	// listen for input
@@ -49,11 +49,11 @@ func Show() (string, error) {
 		return "", errors.New("input must be a number")
 	}
 
-	if inputInt < 0 || inputInt > len(onlyBranchNames)-1 {
+	if inputInt < 0 || inputInt > len(normalisedBranchNames)-1 {
 		return "", errors.New("Branch number is invalid. Please enter one of the numbers next to the branch number")
 	}
 
-	branchToCheckout := onlyBranchNames[inputInt]
+	branchToCheckout := normalisedBranchNames[inputInt]
 	gitCheckoutCmd := exec.Command("git", "checkout", strings.TrimSpace(branchToCheckout))
 	gitCheckoutStdStderr, gitCheckoutErr := gitCheckoutCmd.CombinedOutput()
 
