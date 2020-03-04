@@ -61,7 +61,7 @@ func Show() (string, error) {
 
 	// checkout the branch
 	branchToCheckout := normalisedBranchNames[branchNumberToCheckout]
-	gitCheckoutCmd := exec.Command("git", "checkout", strings.TrimSpace(branchToCheckout))
+	gitCheckoutCmd := exec.Command("git", "checkout", branchToCheckout)
 	gitCheckoutStdStderr, gitCheckoutErr := gitCheckoutCmd.CombinedOutput()
 
 	if gitCheckoutErr != nil {
