@@ -5,8 +5,8 @@ An opinionated wrapper around git to provide a more friendly experience. Makes c
 ## Running it
 Build the executable and then run it:
 ```
-$ go build gg.go
-$ ./gg
+$ go build -o gg
+$ ./gg -h
 ```
 
 ## Command Line Interface
