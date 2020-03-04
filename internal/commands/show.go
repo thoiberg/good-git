@@ -20,12 +20,25 @@ func Show() (string, error) {
 		return "", errors.New(bytesToString(gitBranchesStdoutStderr))
 	}
 
+	// @see https://stackoverflow.com/a/6245587
+	gitCurrentBranch := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
+	gitCurrentBranchStdoutStderr, gitCurrentBranchErr := gitCurrentBranch.CombinedOutput()
+
+	if gitCurrentBranchErr != nil {
+		return "", errors.New(bytesToString(gitBranchesStdoutStderr))
+	}
+
 	branches := strings.Split(bytesToString(gitBranchesStdoutStderr), "\n")
+	currentBranch := strings.Trim(bytesToString(gitCurrentBranchStdoutStderr), "\n")
 
 	var normalisedBranchNames = normaliseGitBranchOutput(branches)
 
 	for index, branch := range normalisedBranchNames {
-		fmt.Printf("%d)\t%v\n", index, branch)
+		if branch == currentBranch {
+			color.Green("%d)\t%v\n", index, branch)
+		} else {
+			fmt.Printf("%d)\t%v\n", index, branch)
+		}
 	}
 
 	branchNumberToCheckout := -1
@@ -73,13 +86,8 @@ func normaliseGitBranchOutput(branches []string) []string {
 	for _, branch := range branches {
 		if len(branch) > 0 {
 			trimmedBranch := strings.TrimSpace(branch)
-			if isCurrentBranch(trimmedBranch) {
-				onlyBranchName := strings.Replace(trimmedBranch, "* ", "", 1)
-				coloredBranchName := color.GreenString("%v", onlyBranchName)
-				normalisedBranchNames = append(normalisedBranchNames, coloredBranchName)
-			} else {
-				normalisedBranchNames = append(normalisedBranchNames, trimmedBranch)
-			}
+			onlyBranchName := strings.Replace(trimmedBranch, "* ", "", 1)
+			normalisedBranchNames = append(normalisedBranchNames, onlyBranchName)
 		}
 	}
 
