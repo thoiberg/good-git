@@ -13,7 +13,7 @@ import (
 )
 
 func Show() (string, error) {
-	gitBranchesCmd := exec.Command("git", "branch", "-a")
+	gitBranchesCmd := exec.Command("git", "branch", "--list")
 	gitBranchesStdoutStderr, gitBranchesErr := gitBranchesCmd.CombinedOutput()
 
 	if gitBranchesErr != nil {
