@@ -75,7 +75,13 @@ func main() {
 				UsageText: "gg status",
 				Aliases:   []string{"huh"},
 				Action: func(c *cli.Context) error {
-					return cli.Exit("Still being built!", 1)
+					message, err := commands.Status()
+
+					if err != nil {
+						return cli.Exit(err, 1)
+					}
+
+					return cli.Exit(message, 0)
 				},
 			},
 		},
