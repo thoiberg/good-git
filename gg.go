@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -42,7 +43,15 @@ func main() {
 				Usage:     "[INCOMPLETE] Commit all working files with a given commit message. Usually followed by gg sync.",
 				UsageText: "gg sync <commit message>",
 				Action: func(c *cli.Context) error {
-					return cli.Exit("Still being built!", 1)
+					commitMessage := c.Args().Get(0)
+					fmt.Println("commit message: %v", commitMessage)
+					message, err := commands.Save(commitMessage)
+
+					if err != nil {
+						return cli.Exit(err, 1)
+					}
+
+					return cli.Exit(message, 0)
 				},
 			},
 			{
