@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	commands "github.com/thoiberg/good-git/internal/commands"
 	"github.com/urfave/cli/v2"
@@ -43,8 +43,9 @@ func main() {
 				Usage:     "[INCOMPLETE] Commit all working files with a given commit message. Usually followed by gg sync.",
 				UsageText: "gg sync <commit message>",
 				Action: func(c *cli.Context) error {
-					commitMessage := c.Args().Get(0)
-					fmt.Println("commit message: %v", commitMessage)
+					// combines all args into a single string so we don't need to use quotation marks
+					commitMessage := strings.Join(c.Args().Slice(), " ")
+
 					message, err := commands.Save(commitMessage)
 
 					if err != nil {
