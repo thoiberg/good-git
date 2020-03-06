@@ -71,7 +71,7 @@ func main() {
 			},
 			{
 				Name:      "status",
-				Usage:     "[INCOMPLETE] Show the status of the git repo right now.",
+				Usage:     "Show the status of the git repo right now.",
 				UsageText: "gg status",
 				Aliases:   []string{"huh"},
 				Action: func(c *cli.Context) error {
