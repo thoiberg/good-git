@@ -42,11 +42,19 @@ func main() {
 				Name:      "save",
 				Usage:     "Commit all working files with a given commit message. Usually followed by gg sync.",
 				UsageText: "gg sync <commit message>",
+				Flags: []cli.Flag{
+					&cli.BoolFlag{
+						Name:  "all",
+						Value: false,
+						Usage: "add and save new files",
+					},
+				},
 				Action: func(c *cli.Context) error {
 					// combines all args into a single string so we don't need to use quotation marks
 					commitMessage := strings.Join(c.Args().Slice(), " ")
+					addNewFiles := c.Bool("all")
 
-					message, err := commands.Save(commitMessage)
+					message, err := commands.Save(addNewFiles, commitMessage)
 
 					if err != nil {
 						return cli.Exit(err, 1)

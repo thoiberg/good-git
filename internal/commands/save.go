@@ -5,7 +5,16 @@ import (
 	"os/exec"
 )
 
-func Save(commitMessage string) (string, error) {
+func Save(addNewFiles bool, commitMessage string) (string, error) {
+	if addNewFiles {
+		gitAddCmd := exec.Command("git", "add", "--all")
+		output, err := gitAddCmd.CombinedOutput()
+
+		if err != nil {
+			return "", errors.New(bytesToString(output))
+		}
+	}
+
 	gitCommitCmd := exec.Command("git", "commit", "-am", commitMessage)
 	output, err := gitCommitCmd.CombinedOutput()
 
