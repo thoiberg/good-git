@@ -1,11 +1,10 @@
 # good-git
 An opinionated wrapper around git to provide a more friendly experience. Makes common commands super easy. Does not replace the real git cli for more complex commands.
 
-
 ## Running it
 Build the executable and then run it:
 ```
-$ go build -o gg
+$ make
 $ ./gg -h
 ```
 
