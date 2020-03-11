@@ -3,10 +3,9 @@ package utils
 import (
 	"errors"
 	"os/exec"
-	"strings"
 )
 
-func RunGitCommand(command string) (string, error) {
+func RunGitCommand(command ...string) (string, error) {
 	commandParams := normaliseCommand(command)
 	gitCommand := exec.Command(commandParams[0], commandParams[1:]...)
 	output, err := gitCommand.CombinedOutput()
@@ -23,12 +22,11 @@ func bytesToString(data []byte) string {
 	return string(data[:])
 }
 
-func normaliseCommand(command string) []string {
-	commandArgs := strings.Split(command, " ")
-	if commandArgs[0] != "git" {
+func normaliseCommand(command []string) []string {
+	if command[0] != "git" {
 		gitArg := []string{"git"}
-		return append(gitArg, commandArgs...)
+		return append(gitArg, command...)
 	}
 
-	return commandArgs
+	return command
 }

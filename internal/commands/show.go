@@ -2,34 +2,31 @@ package commands
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 
 	"github.com/fatih/color"
+	"github.com/thoiberg/good-git/internal/utils"
 )
 
 func Show() (string, error) {
-	gitBranchesCmd := exec.Command("git", "branch", "--list")
-	gitBranchesStdoutStderr, gitBranchesErr := gitBranchesCmd.CombinedOutput()
+	gitBranchesStdoutStderr, gitBranchesErr := utils.RunGitCommand("git", "branch", "--list")
 
 	if gitBranchesErr != nil {
-		return "", errors.New(bytesToString(gitBranchesStdoutStderr))
+		return "", gitBranchesErr
 	}
 
 	// @see https://stackoverflow.com/a/6245587
-	gitCurrentBranch := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
-	gitCurrentBranchStdoutStderr, gitCurrentBranchErr := gitCurrentBranch.CombinedOutput()
+	gitCurrentBranchStdoutStderr, gitCurrentBranchErr := utils.RunGitCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
 
 	if gitCurrentBranchErr != nil {
-		return "", errors.New(bytesToString(gitBranchesStdoutStderr))
+		return "", gitCurrentBranchErr
 	}
 
-	branches := strings.Split(bytesToString(gitBranchesStdoutStderr), "\n")
-	currentBranch := strings.Trim(bytesToString(gitCurrentBranchStdoutStderr), "\n")
+	branches := strings.Split(gitBranchesStdoutStderr, "\n")
+	currentBranch := strings.Trim(gitCurrentBranchStdoutStderr, "\n")
 
 	var normalisedBranchNames = normaliseGitBranchOutput(branches)
 
@@ -73,14 +70,13 @@ func Show() (string, error) {
 
 	// checkout the branch
 	branchToCheckout := normalisedBranchNames[branchNumberToCheckout]
-	gitCheckoutCmd := exec.Command("git", "checkout", branchToCheckout)
-	gitCheckoutStdStderr, gitCheckoutErr := gitCheckoutCmd.CombinedOutput()
+	gitCheckoutStdStderr, gitCheckoutErr := utils.RunGitCommand("git", "checkout", branchToCheckout)
 
 	if gitCheckoutErr != nil {
-		return "", errors.New(bytesToString(gitCheckoutStdStderr))
+		return "", gitCheckoutErr
 	}
 
-	return bytesToString(gitCheckoutStdStderr), nil
+	return gitCheckoutStdStderr, nil
 }
 
 // https://gist.github.com/is73/de4f38e1d8da157fe33e
