@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
+
+	"github.com/fatih/color"
 )
 
 func Sync() (string, error) {
-	// get current branch
-	// call rev-parse on it
-	// if command errors then there's no remote branch and need to set the upstream
 	command := exec.Command("git", "branch", "--show-current")
 	output, err := command.CombinedOutput()
 
@@ -20,12 +19,14 @@ func Sync() (string, error) {
 
 	currentBranch := strings.TrimSpace(bytesToString(output))
 
+	// https://stackoverflow.com/a/16879922
 	command = exec.Command("git", "rev-parse", "--abbrev-ref", fmt.Sprintf("%v@{upstream}", currentBranch))
 	output, err = command.CombinedOutput()
 
 	if err != nil {
 		// then there's no upstream set for the branch
-		fmt.Println("No Remote branch set up for: ", currentBranch)
+		color.Yellow("No remote branch set up for: ", currentBranch)
+		fmt.Println("Creating upstream and pushing commits...")
 
 		command = exec.Command("git", "push", "--set-upstream", "origin", currentBranch)
 		output, err = command.CombinedOutput()
