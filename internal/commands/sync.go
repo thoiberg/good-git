@@ -25,7 +25,7 @@ func Sync() (string, error) {
 
 	if err != nil {
 		// then there's no upstream set for the branch
-		color.Yellow("No remote branch set up for: ", currentBranch)
+		color.Yellow("No remote branch set up for %s", currentBranch)
 		fmt.Println("Creating upstream and pushing commits...")
 
 		command = exec.Command("git", "push", "--set-upstream", "origin", currentBranch)
