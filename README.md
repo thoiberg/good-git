@@ -18,7 +18,7 @@ Checkout a remote branch and switch to it locally, tracking the remote with the 
 
 ## `gg sync`
 
-Pull any commits from your remote branch into your local, and push any local commits to the remote.
+Pull any commits from your remote branch into your local, and push any local commits to the remote. If the current local branch doesn't have remote tracking set up then it will automatically be set, with the remote branch being given the same name as the local one.
 
 ## `gg show`
 
