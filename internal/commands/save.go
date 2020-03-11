@@ -1,26 +1,23 @@
 package commands
 
 import (
-	"errors"
-	"os/exec"
+	"github.com/thoiberg/good-git/internal/utils"
 )
 
 func Save(addNewFiles bool, commitMessage string) (string, error) {
 	if addNewFiles {
-		gitAddCmd := exec.Command("git", "add", "--all")
-		output, err := gitAddCmd.CombinedOutput()
+		_, err := utils.RunGitCommand("git", "add", "--all")
 
 		if err != nil {
-			return "", errors.New(bytesToString(output))
+			return "", err
 		}
 	}
 
-	gitCommitCmd := exec.Command("git", "commit", "-am", commitMessage)
-	output, err := gitCommitCmd.CombinedOutput()
+	output, err := utils.RunGitCommand("git", "commit", "-am", commitMessage)
 
 	if err != nil {
-		return "", errors.New(bytesToString(output))
+		return "", err
 	}
 
-	return bytesToString(output), nil
+	return output, nil
 }
