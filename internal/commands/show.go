@@ -79,11 +79,6 @@ func Show() (string, error) {
 	return gitCheckoutStdStderr, nil
 }
 
-// https://gist.github.com/is73/de4f38e1d8da157fe33e
-func bytesToString(data []byte) string {
-	return string(data[:])
-}
-
 func normaliseGitBranchOutput(branches []string) []string {
 	var normalisedBranchNames []string
 
