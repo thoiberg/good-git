@@ -12,21 +12,21 @@ import (
 )
 
 func Show() (string, error) {
-	gitBranchesStdoutStderr, gitBranchesErr := utils.RunGitCommand("git", "branch", "--list")
+	gitBranchesOutput, err := utils.RunGitCommand("git", "branch", "--list")
 
-	if gitBranchesErr != nil {
-		return "", gitBranchesErr
+	if err != nil {
+		return "", err
 	}
 
 	// @see https://stackoverflow.com/a/6245587
-	gitCurrentBranchStdoutStderr, gitCurrentBranchErr := utils.RunGitCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
+	gitCurrentBranchOutput, err := utils.RunGitCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
 
-	if gitCurrentBranchErr != nil {
-		return "", gitCurrentBranchErr
+	if err != nil {
+		return "", err
 	}
 
-	branches := strings.Split(gitBranchesStdoutStderr, "\n")
-	currentBranch := strings.Trim(gitCurrentBranchStdoutStderr, "\n")
+	branches := strings.Split(gitBranchesOutput, "\n")
+	currentBranch := strings.Trim(gitCurrentBranchOutput, "\n")
 
 	var normalisedBranchNames = normaliseGitBranchOutput(branches)
 
@@ -70,10 +70,10 @@ func Show() (string, error) {
 
 	// checkout the branch
 	branchToCheckout := normalisedBranchNames[branchNumberToCheckout]
-	gitCheckoutStdStderr, gitCheckoutErr := utils.RunGitCommand("git", "checkout", branchToCheckout)
+	gitCheckoutStdStderr, err := utils.RunGitCommand("git", "checkout", branchToCheckout)
 
-	if gitCheckoutErr != nil {
-		return "", gitCheckoutErr
+	if err != nil {
+		return "", err
 	}
 
 	return gitCheckoutStdStderr, nil
